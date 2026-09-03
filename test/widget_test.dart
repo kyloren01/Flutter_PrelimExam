@@ -1,30 +1,37 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:flutter_prelimexam_calong/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
+  testWidgets('shows the shopping home page and toggles theme', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(const MyApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    expect(find.text('Shopping'), findsOneWidget);
+    expect(find.text('Aurora Headphones'), findsOneWidget);
+    expect(find.byTooltip('Open cart'), findsOneWidget);
+    expect(find.byTooltip('Switch to dark mode'), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    await tester.tap(find.byTooltip('Switch to dark mode'));
+    await tester.pumpAndSettle();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.byTooltip('Switch to light mode'), findsOneWidget);
+  });
+
+  testWidgets('opens the correct product detail page', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(const MyApp());
+
+    await tester.tap(find.text('Aurora Headphones'));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.textContaining('Immersive over-ear headphones'),
+      findsOneWidget,
+    );
+    expect(find.text('\$129'), findsOneWidget);
+    expect(find.text('4.8 rating'), findsOneWidget);
   });
 }
